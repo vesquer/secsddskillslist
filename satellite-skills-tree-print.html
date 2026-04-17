@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spacecraft ECS Skills — Print Version</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── PAGE SETUP ── */
+@page {
+  size: A4;
+  margin: 12mm 14mm 14mm 14mm;
+}
+
+:root {
+  --navy:#0D1F3C; --slate:#374151; --muted:#6B7280; --div:#D1D5DB;
+  --t1:#D95E2B; --t1l:#FDF0EA;
+  --t2:#C98B0A; --t2l:#FEF7E0;
+  --t3:#1B6FB5; --t3l:#E4EFF9;
+  --t4:#0B9668; --t4l:#DFF5EE;
+  --t5:#6537A3; --t5l:#EEE8F8;
+  --tt:#0E7490; --ttl:#E0F7FA;
+  --ta:#2C6E8A; --tal:#E3F2F8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: white;
+  color: var(--slate);
+  font-size: 9.5pt;
+  line-height: 1.4;
+}
+
+/* ── SCREEN PREVIEW WRAPPER ── */
+@media screen {
+  body { background: #E5E7EB; padding: 20px; }
+  .page { background: white; max-width: 210mm; margin: 0 auto; padding: 12mm 14mm 14mm 14mm; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
+}
+@media print {
+  body { background: white; }
+  .page { padding: 0; }
+}
+
+/* ── HEADER ── */
+.page-header {
+  border-bottom: 2.5pt solid var(--t3);
+  padding-bottom: 7pt;
+  margin-bottom: 10pt;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16pt;
+}
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 6.5pt;
+  letter-spacing: 2.5px;
+  color: var(--t3);
+  text-transform: uppercase;
+  margin-bottom: 3pt;
+}
+.page-header h1 {
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.25;
+}
+.page-header h1 span { color: var(--t3); }
+.header-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5pt 10pt;
+  margin-bottom: 9pt;
+  padding: 5pt 8pt;
+  border: 0.5pt solid var(--div);
+  border-radius: 2pt;
+  background: #F9FAFB;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 3pt;
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  color: var(--muted);
+}
+.legend-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  font-weight: 500;
+  padding: 1pt 4pt;
+  border-radius: 2pt;
+}
+
+/* ── TIER BLOCK ── */
+.tier-block {
+  margin-bottom: 9pt;
+  page-break-inside: avoid;
+}
+.tier-hdr {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  margin-bottom: 5pt;
+}
+.tier-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 6.5pt;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: white;
+  padding: 2pt 7pt;
+  border-radius: 2pt;
+  flex-shrink: 0;
+}
+.tier-title {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex: 1;
+}
+.tier-line { flex: 1; height: 0.5pt; background: var(--div); }
+.tier-prereq {
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  color: var(--muted);
+  padding: 1pt 5pt;
+  border: 0.5pt solid var(--div);
+  border-radius: 2pt;
+  white-space: nowrap;
+}
+
+/* ── PREREQ BANNER ── */
+.prereq-banner {
+  display: flex;
+  gap: 6pt;
+  align-items: flex-start;
+  background: #F9FAFB;
+  border: 0.5pt solid var(--div);
+  border-left: 2pt solid #9CA3AF;
+  border-radius: 2pt;
+  padding: 4pt 7pt;
+  margin-bottom: 5pt;
+  page-break-inside: avoid;
+}
+.prereq-banner-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 5.5pt;
+  letter-spacing: 1px;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-top: 1pt;
+}
+.prereq-banner-body {
+  font-size: 7pt;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+/* ── GROUP ── */
+.group-block {
+  margin-bottom: 4pt;
+  page-break-inside: avoid;
+}
+.group-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 3pt;
+  display: flex;
+  align-items: center;
+  gap: 5pt;
+}
+.group-label-rule { flex: 1; height: 0.5pt; background: var(--div); }
+
+/* ── NODES ── */
+.tree-nodes { display: flex; flex-wrap: wrap; gap: 2.5pt; }
+
+.node {
+  display: inline-flex;
+  align-items: center;
+  gap: 3pt;
+  padding: 2pt 6pt 2pt 5pt;
+  border-radius: 2pt;
+  font-size: 7.5pt;
+  font-weight: 500;
+  color: var(--navy);
+  background: white;
+  border: 0.5pt solid var(--div);
+  border-left: 2.5pt solid;
+  white-space: nowrap;
+}
+.node.is-test { border-style: dashed; border-left-style: solid; }
+.node.is-analysis { background: #FAFAFE; }
+.ntype {
+  font-family: 'DM Mono', monospace;
+  font-size: 5.5pt;
+  letter-spacing: 0.3px;
+  padding: 0.5pt 2.5pt;
+  border-radius: 1.5pt;
+  opacity: 0.9;
+}
+
+/* ── SECTION DIVIDER (for tracks) ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 8pt;
+  margin: 10pt 0 7pt;
+}
+.section-divider-line { flex: 1; height: 0.5pt; background: var(--div); }
+.section-divider-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ── TRACK BLOCK ── */
+.track-block {
+  margin-bottom: 8pt;
+  page-break-inside: avoid;
+}
+.track-hdr {
+  display: flex;
+  align-items: center;
+  gap: 6pt;
+  padding: 3pt 7pt;
+  border-radius: 2pt;
+  margin-bottom: 5pt;
+  font-family: 'DM Mono', monospace;
+  font-size: 6.5pt;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.track-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 6pt;
+  margin-bottom: 5pt;
+  letter-spacing: 0.5px;
+}
+
+/* ── SIDE NODES (used for track items, same style as main nodes) ── */
+.side-nodes { display: flex; flex-wrap: wrap; gap: 2.5pt; }
+
+/* ── FOOTNOTE ── */
+.footnote {
+  margin-top: 14pt;
+  padding-top: 5pt;
+  border-top: 0.5pt solid var(--div);
+  font-size: 6.5pt;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── PRINT: suppress screen-only elements ── */
+@media print {
+  .no-print { display: none !important; }
+  a { text-decoration: none; color: inherit; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── HEADER ── -->
+<header class="page-header">
+  <div>
+    <div class="eyebrow">PhilSA · ECS Manufacturing Capability Framework</div>
+    <h1>Spacecraft <span>Electrical &amp; Computing Systems</span> — Skills Tree</h1>
+  </div>
+  <div class="header-meta">
+    Compact Reference · Print Edition<br>
+    DSN = Design &nbsp;·&nbsp; ANA = Analysis &nbsp;·&nbsp; TST = Test &nbsp;·&nbsp; HW = Hardware &nbsp;·&nbsp; DOC = Technical Doc &nbsp;·&nbsp; ADM = Admin
+  </div>
+</header>
+
+<!-- ── LEGEND ── -->
+<div class="legend">
+  <div class="legend-item"><span class="legend-chip" style="background:#FEF9C3;color:#854D0E">DSN</span> Design</div>
+  <div class="legend-item"><span class="legend-chip" style="background:#E0E7FF;color:#3730A3">ANA</span> Analysis</div>
+  <div class="legend-item"><span class="legend-chip" style="background:#DCFCE7;color:#166534">TST</span> Test / dashed border</div>
+  <div class="legend-item"><span class="legend-chip" style="background:#F1F5F9;color:#475569">HW</span> Hardware</div>
+  <div class="legend-item"><span class="legend-chip" style="background:#E0F7FA;color:#0E7490">DOC</span> Technical Documentation</div>
+  <div class="legend-item"><span class="legend-chip" style="background:#E0F2FE;color:#075985">ADM</span> Government Admin</div>
+  <div class="legend-item" style="margin-left:auto;font-size:6pt;color:var(--muted)">Left border colour = Tier &nbsp;·&nbsp; Shaded background = Analysis node</div>
+</div>
+
+<div id="content"></div>
+
+<div class="footnote">
+  <span>PhilSA · ECS Manufacturing Capability Framework</span>
+  <span>Spacecraft Electrical &amp; Computing Systems — Skills Tree</span>
+</div>
+
+</div><!-- end .page -->
+
+<script>
+const TYPE_META = {
+  design:  { label:"DSN", bg:"#FEF9C3", color:"#854D0E" },
+  analysis:{ label:"ANA", bg:"#E0E7FF", color:"#3730A3" },
+  test:    { label:"TST", bg:"#DCFCE7", color:"#166534" },
+  hw:      { label:"HW",  bg:"#F1F5F9", color:"#475569" },
+  system:  { label:"SYS", bg:"#EDE9FE", color:"#5B21B6" },
+  admin:   { label:"ADM", bg:"#E0F2FE", color:"#075985" },
+  tech:    { label:"DOC", bg:"#E0F7FA", color:"#0E7490" },
+};
+
+const TIERS = [
+  {
+    num:1, color:"#D95E2B", light:"#FDF0EA", label:"FOUNDATIONAL KNOWLEDGE — SPACE & ROCKET SPECIFIC", prereq:"ECE/EE degree assumed",
+    prereqBanner:"ECE/EE degree prerequisites assumed — circuit theory (KVL/KCL, Thevenin/Norton, AC/DC), analog & digital electronics, op-amps, MOSFETs, processor architectures, embedded C, FPGA basics (LUT/timing/clock domains), software version control, and standard lab instrumentation. Skills below are space- and launch-vehicle-specific additions beyond degree coverage.",
+    groups:[
+      { label:"Spacecraft & Launch Vehicle Bus Protocols", nodes:[
+        { type:"design", title:"Spacecraft Bus Protocols",           tag:"RS-422, SpaceWire, MIL-STD-1553, CAN FD",  desc:"Spacecraft-specific bus protocols: RS-422 differential links, SpaceWire (ECSS-E-ST-50-12), MIL-STD-1553 BC/RT/BM, CAN FD for launch vehicle use.", prereq:"Digital logic, embedded C (degree)" },
+        { type:"design", title:"RTOS for Space Applications",        tag:"RTEMS, FreeRTOS-MPU, scheduling, FDIR tasks",desc:"Space-grade RTOS: RTEMS configuration, FreeRTOS-MPU for memory protection, priority ceiling, FDIR task architecture, WCET analysis.", prereq:"RTOS concepts (degree)" },
+        { type:"design", title:"PCB Schematic Reading (Space-Grade)",tag:"ECSS net naming, EMC shields, hi-rel symbols", desc:"Space-specific schematic conventions: ECSS-compliant net naming, redundant signal paths, EMC shielding symbols, hi-rel component conventions.", prereq:"Schematic reading (degree)" },
+      ]},
+      { label:"Space Environment & Standards", nodes:[
+        { type:"analysis", title:"Space Radiation Physics",           tag:"TID, SEE, NIEL, Van Allen",                desc:"Ionizing radiation sources, TID accumulation, SEE mechanisms.", prereq:"None" },
+        { type:"analysis", title:"Thermal & Vacuum Environment",     tag:"Eclipse cycles, radiator sizing, outgassing",desc:"Orbital thermal environment, eclipse fractions, basic radiator sizing, outgassing rules.", prereq:"None" },
+        { type:"analysis", title:"Electromagnetic Environment",      tag:"EMI sources, grounding philosophy",         desc:"Space EMI sources, conducted/radiated emission paths, cable shielding fundamentals.", prereq:"AC signal theory (degree)" },
+        { type:"design",   title:"ECSS Standards Overview",          tag:"ECSS-E, ECSS-Q, ECSS-M",                  desc:"Structure and applicability of ECSS standard families.", prereq:"None" },
+        { type:"design",   title:"MIL-STD & NASA References",        tag:"MIL-STD-461/1553, NASA-HDBK-8739",        desc:"Key US standards: EMC (461), data bus (1553), reliability handbooks.", prereq:"ECSS Overview" },
+        { type:"design",   title:"Part Classification & Screening",  tag:"EEE-INST-002, MIL-PRF-38535, upscreening", desc:"Space/mil/industrial part grades, lot acceptance, part approval lists, upscreening.", prereq:"ECSS Overview" },
+      ]},
+      { label:"Photovoltaic & Power Generation Foundations", nodes:[
+        { type:"analysis", title:"Space Solar Cell Physics",          tag:"Triple-junction III-V, Isc/Voc, fill factor, AM0", desc:"Space solar cell operation: III-V triple-junction architecture, AM0 spectrum, Isc/Voc, fill factor.", prereq:"Semiconductor physics (degree)" },
+        { type:"analysis", title:"Solar Cell Characterisation",       tag:"I-V curve, current class, Pmax, temp. coefficients",  desc:"Reading cell measurement data: I-V curve, current class matching, Pmax, temperature coefficients of Voc and Isc.", prereq:"Space Solar Cell Physics" },
+        { type:"analysis", title:"EOL Radiation Damage Estimation",   tag:"SPENVIS, cover glass loss, micrometeorite loss",       desc:"End-of-life degradation via SPENVIS: radiation fluence, cover glass and micrometeorite loss factors, BOL-to-EOL power margin.", prereq:"Space Radiation Physics, Space Solar Cell Physics" },
+        { type:"analysis", title:"Solar String & Section Architecture",tag:"Series strings, blocking diodes, BCR topology, FDIR", desc:"Solar panel electrical architecture: series strings, blocking diodes, BCR grouping, FDIR of string/section loss.", prereq:"Space Solar Cell Physics" },
+      ]},
+      { label:"Launch Vehicle Avionics Foundations", nodes:[
+        { type:"analysis", title:"Rocket Propulsion Systems Overview", tag:"LRE, SRM, hybrid, thrust vector control",   desc:"Launch vehicle propulsion concepts for ECS engineers: liquid/solid/hybrid motors, TVC, propellant types and their avionics implications.", prereq:"None" },
+        { type:"design",   title:"Pyrotechnic & Ordnance Circuits",   tag:"Squib drivers, EED, CDU, arming logic",    desc:"Electroexplosive device initiation: CDUs, bridgewire/semiconductor EED, arming/safing logic, DFPU, MIL-STD-1512 compliance.", prereq:"Digital logic, DC circuits (degree)" },
+        { type:"design",   title:"Flight Termination System Fundamentals", tag:"FTS receiver, destruct signal, range safety", desc:"Range safety FTS requirements: dual-chain receivers, ARM/FIRE command decoding, destruct output actuation.", prereq:"Pyrotechnic & Ordnance Circuits" },
+        { type:"design",   title:"Umbilical & Breakaway Connector Systems", tag:"Zero-second umbilical, electrical disconnect, pin coding", desc:"Launch umbilical interfaces: retractable and breakaway connectors, power handover at T-0, pin coding, continuity verification.", prereq:"None" },
+        { type:"analysis", title:"Launch Vehicle EME Environment",    tag:"Motor ignition transients, ESD, RF keep-out",desc:"Propulsion-induced EME: ignition transients, plume RF attenuation, propellant vapour ESD hazard zones.", prereq:"Electromagnetic Environment" },
+      ]},
+      { label:"Space Payload Sensor Interfaces", nodes:[
+        { type:"analysis", title:"Space Detector & Sensor Physics",   tag:"Photodiodes, CCD/CMOS, bolometers, quantum eff.", desc:"Payload detector physics: quantum efficiency, dark current vs. temperature, detector-limited noise, CCD vs. CMOS trade-offs for space.", prereq:"Analog electronics (degree)" },
+        { type:"analysis", title:"Low-Noise Grounding & Shielding",  tag:"Single-point GND, guard rings, diff. signal",desc:"Low-noise grounding for space payloads: single-point vs multi-point ground, guard traces, Faraday shielding, differential signalling in space EMI contexts.", prereq:"Electromagnetic Environment, analog electronics (degree)" },
+      ]},
+    ]
+  },
+  {
+    num:2, color:"#C98B0A", light:"#FEF7E0", label:"CORE ENGINEERING", prereq:"Requires Tier 1",
+    groups:[
+      { label:"PCB Design", nodes:[
+        { type:"design",   title:"PCB Schematic Design",              tag:"Hierarchical sheets, ERC, ECO",            desc:"Professional schematic authoring, hierarchical sheets, ERC, ECO management.", prereq:"PCB Schematic Reading (Space-Grade)" },
+        { type:"design",   title:"High-Rel PCB Layout",               tag:"IPC Class 3, impedance ctrl, via-in-pad",  desc:"Space-grade PCB layout: controlled impedance, thermal relief, IPC-A-610 Class 3.", prereq:"PCB Schematic Design" },
+        { type:"analysis", title:"Signal Integrity Design",           tag:"Transmission lines, crosstalk, eye diagram", desc:"High-speed PCB: impedance, termination, crosstalk, eye diagram analysis.", prereq:"High-Rel PCB Layout, AC signal theory (degree)" },
+        { type:"design",   title:"Power Supply Design",               tag:"Buck, boost, LDO, feedback loop",           desc:"SMPS and linear regulators: topology, compensation, EMI filtering, efficiency.", prereq:"Analog electronics (degree)" },
+        { type:"design",   title:"Analog Front-End Design",           tag:"Low-noise amp, instrumentation amp, ADC drive",desc:"Sensor interface: instrumentation amps, low-noise design, precision ADC driving.", prereq:"Analog electronics (degree)" },
+        { type:"design",   title:"Motor & Actuator Drive Electronics",tag:"BLDC, H-bridge, PWM, current sense",        desc:"Driver circuits for reaction wheels and magnetorquers.", prereq:"Power Supply Design" },
+      ]},
+      { label:"Solar Panel Electrical Design", nodes:[
+        { type:"analysis", title:"Solar Panel Requirements & ICD",    tag:"String/section pin-out, wiring diagrams, redundancy", desc:"Solar panel electrical requirements and ICD: string/section connector assignments, wiring diagrams, redundancy routing.", prereq:"Solar String Architecture, PCB Schematic Design" },
+        { type:"analysis", title:"Solar Cell Procurement & QSL",      tag:"Supplier selection, procurement spec, QSL report",    desc:"Solar cell procurement: supplier evaluation, reading data sheets, writing procurement specs, preparing QSL report.", prereq:"Solar Cell Characterisation, ECSS Standards" },
+        { type:"analysis", title:"Power Performance Analysis",        tag:"STK sim, eclipse fraction, EOL worst-case power",     desc:"Solar power yield per face: STK-based sun angles, temperature-dependent Voc/Isc, power-safe condition at EOL.", prereq:"EOL Radiation Damage, Solar String Architecture" },
+        { type:"design",   title:"Blocking Diode Board Design",       tag:"String isolation diodes, forward drop, thermal",      desc:"Blocking diode board: diode selection, forward voltage drop budget, thermal management, section-level wiring interface.", prereq:"Solar Panel Requirements & ICD, Power Supply Design" },
+      ]},
+      { label:"PCB & Module Testing", nodes:[
+        { type:"test",     title:"PCB Bring-Up & Debug",              tag:"Power sequencing, scope, JTAG",            desc:"Systematic board bring-up: power rail sequencing, oscilloscope probing, JTAG debug.", prereq:"PCB Schematic Design, PCB Layout" },
+        { type:"test",     title:"Electronic Module Functional Testing",tag:"Test scripts, loopback, stimulus-response",desc:"Functional verification: stimulus-response, boundary scan, test scripts.", prereq:"PCB Bring-Up & Debug" },
+        { type:"test",     title:"Measurement & Instrumentation",     tag:"DMM, oscilloscope, spectrum analyser, LCR", desc:"Correct use of lab instruments for electronics characterisation.", prereq:"DC Circuit, AC & Signal (degree)" },
+        { type:"test",     title:"GSE Design & Operation",            tag:"Test harness, breakout boards, adapters",   desc:"Ground support equipment: test harness wiring, breakout boards.", prereq:"Electronic Module Testing" },
+      ]},
+      { label:"Radiation & Reliability", nodes:[
+        { type:"analysis", title:"Radiation Effects on Devices",      tag:"Gate oxide, latch-up, bit-flip",           desc:"Device radiation effects: oxide trapping (TID), latch-up, SEUs in SRAM/flip-flops.", prereq:"Space Radiation Physics, analog electronics (degree)" },
+        { type:"design",   title:"RHBD",                              tag:"Guard rings, enclosed FETs, ELT layout",   desc:"Radiation-hardened by design: enclosed transistors, guard rings, annular MOSFETs.", prereq:"Radiation Effects on Devices, High-Rel PCB Layout" },
+        { type:"design",   title:"Triple Modular Redundancy",         tag:"TMR voters, EDAC, FPGA scrubbing",         desc:"System fault tolerance: TMR voters, majority logic, FPGA scrubbing, EDAC.", prereq:"FPGA basics (degree), Radiation Effects on Devices" },
+        { type:"analysis", title:"Component Derating",                tag:"ECSS-Q-ST-30-11, voltage/temp margins",    desc:"Applying derating guidelines per ECSS-Q-ST-30-11.", prereq:"ECSS Standards Overview, analog electronics (degree)" },
+        { type:"analysis", title:"Worst-Case Circuit Analysis",       tag:"WCCA, tolerance stack-up, Monte Carlo",    desc:"WCCA: tolerance stack-up, end-of-life drift, temperature variation, Monte Carlo.", prereq:"Component Derating, analog electronics (degree)" },
+        { type:"analysis", title:"FMEA at Circuit Level",             tag:"FMEA worksheet, criticality, SPF ID",      desc:"Circuit-level FMEA: failure mode ID, criticality ranking, single-point failure elimination.", prereq:"Component Derating, WCCA" },
+      ]},
+      { label:"FPGA Development", nodes:[
+        { type:"design",   title:"RTL Design in VHDL/Verilog",        tag:"Synthesisable RTL, FSM coding",            desc:"Synthesisable RTL: concurrent/sequential statements, clocking, reset, testbenches.", prereq:"FPGA basics (degree), digital logic (degree)" },
+        { type:"design",   title:"FPGA Implementation Flow",          tag:"Synthesis, P&R, STA, timing closure",      desc:"FPGA flow: synthesis, place-and-route, static timing analysis, bitstream.", prereq:"RTL Design in VHDL/Verilog" },
+        { type:"test",     title:"FPGA Simulation & Verification",    tag:"Testbenches, waveform, code coverage",     desc:"FPGA verification: testbench authoring, waveform review, co-simulation, coverage.", prereq:"RTL Design in VHDL/Verilog" },
+        { type:"design",   title:"SEU Mitigation in FPGA",            tag:"TMR in fabric, scrubbing, EDAC in BRAM",   desc:"FPGA radiation mitigation: TMR in fabric, configuration scrubbing, EDAC in block RAM.", prereq:"Triple Modular Redundancy, FPGA Implementation Flow" },
+      ]},
+      { label:"Software Development", nodes:[
+        { type:"design",   title:"Embedded Middleware & Drivers",      tag:"HAL, peripheral drivers, ISR, DMA",       desc:"Peripheral drivers (UART, SPI, I2C), HAL, ISR design, DMA configuration.", prereq:"Embedded C (degree), Spacecraft Bus Protocols" },
+        { type:"design",   title:"RTOS Application Development",      tag:"FreeRTOS/RTEMS, tasks, queues, timers",    desc:"RTOS application design: task decomposition, messaging, timers, stack sizing.", prereq:"RTOS for Space Applications, Embedded Middleware & Drivers" },
+        { type:"test",     title:"Embedded Software Testing",         tag:"Unit test, HW mock, MISRA-C, coverage",    desc:"Embedded unit testing, HW mocking, code coverage, MISRA-C static analysis.", prereq:"RTOS Application Development" },
+        { type:"design",   title:"Space Bus Protocol Implementation", tag:"SpaceWire, MIL-STD-1553, CCSDS PUS",      desc:"SpaceWire link layer, 1553 BC/RT/BM roles, CCSDS Packet Utilization Standard.", prereq:"RTL Design in VHDL/Verilog, Embedded Middleware & Drivers" },
+        { type:"design",   title:"Software Safety Standards",         tag:"ECSS-E-ST-40C, DO-178C concepts, SIL",    desc:"Space and aviation SW safety standards: ECSS-E-ST-40C software engineering process, DO-178C design assurance levels (DAL A–E), safety integrity levels, software criticality classification, independence in verification.", prereq:"RTOS Application Development, ECSS Standards Overview" },
+        { type:"design",   title:"Static Analysis & Coding Standards",tag:"MISRA-C:2012, Polyspace, CERTC, McCabe",  desc:"Safety-critical coding standards: MISRA-C:2012 rule compliance, CERTC secure coding, Polyspace/CodeSonar static analysis for run-time errors, cyclomatic complexity, obligatory/advisory rule management.", prereq:"Embedded Software Testing, Software Safety Standards" },
+        { type:"design",   title:"Software Configuration Management", tag:"Baseline, build config, CMMI, release control",desc:"Flight SW configuration control: establishing software baselines, build reproducibility, CCB process, CMMI-aligned CM practices, CI identification, release packaging and export.", prereq:"Software Version Control (degree), Embedded Middleware & Drivers" },
+        { type:"design",   title:"Time & Space Partitioning",         tag:"ARINC 653, XtratuM, partition scheduling", desc:"Mixed-criticality partitioning: ARINC 653 partition model, hypervisor-based isolation (XtratuM, PikeOS), inter-partition communication (sampling/queuing ports), partition restart and system recovery.", prereq:"RTOS Application Development, Software Safety Standards" },
+      ]},
+      { label:"Front-End Electronics Engineering", nodes:[
+        { type:"design",   title:"Detector Readout Circuit Design",   tag:"TIA, CDS, charge amp, CTIA",              desc:"Readout topologies: TIA, charge-sensitive amps, correlated double sampling, CTIA.", prereq:"Analog Front-End Design, Space Detector & Sensor Physics" },
+        { type:"design",   title:"ROIC / ASIC Interface Design",      tag:"ROIC clocking, bias generation, mux output",desc:"ROIC interfacing: clock sequencing, bias supply circuits, multiplexed analog output.", prereq:"Detector Readout Circuit Design, FPGA basics (degree)" },
+        { type:"analysis", title:"Noise Budget Design",               tag:"RTI noise allocation, SNR target, lifetime",desc:"Top-down noise budgeting: RTI allocations, SNR targets across temp and radiation lifetime.", prereq:"Low-Noise Grounding & Shielding, Detector Readout Circuit Design" },
+        { type:"design",   title:"High-Speed ADC Interface",         tag:"SAR vs sigma-delta, LVDS, clock jitter",   desc:"ADC selection and interfacing: architectures, LVDS output, clock jitter impact on SNR.", prereq:"Signal Integrity Design, analog electronics (degree)" },
+        { type:"design",   title:"Precision Bias & Reference Circuits",tag:"Bandgap ref, current mirror, DAC-trim",  desc:"Bias sources: bandgap references, current mirrors, DAC-based trimming, tempco management.", prereq:"Component Derating, analog electronics (degree)" },
+        { type:"design",   title:"Image Sensor Interface Design",     tag:"CCD clocking, CMOS rolling/global shutter",desc:"Imaging sensor I/F: CCD multi-phase clocking, CMOS rolling/global shutter control.", prereq:"ROIC / ASIC Interface Design, Detector Readout Circuit Design" },
+        { type:"design",   title:"Electro-Optical Calibration Circuits",tag:"Dark subtract, flat-field, offset/gain DAC",desc:"Calibration circuits: dark subtraction, flat-field injection, DAC-based offset/gain correction.", prereq:"Detector Readout Circuit Design, analog electronics (degree)" },
+        { type:"design",   title:"Thermal Stabilisation Electronics", tag:"TEC driver, PID loop, thermistor readout", desc:"Temperature control: TEC/Peltier drivers, thermistor readout, PID implementation, heater switching.", prereq:"Precision Bias & Reference Circuits, Motor & Actuator Drive Electronics" },
+      ]},
+      { label:"Hardware Fabrication & Assembly", nodes:[
+        { type:"hw",       title:"PCB Assembly & Soldering",          tag:"SMT reflow, hand solder, IPC Class 3",     desc:"SMT placement and reflow, hand soldering, IPC-A-610 Class 3 workmanship.", prereq:"PCB Schematic Reading (Space-Grade)" },
+        { type:"hw",       title:"PCB Rework & Component Replacement",tag:"BGA reball, hot-air, pad repair",          desc:"BGA rework, hot-air station, solder bridge removal, pad lifting repair.", prereq:"PCB Assembly & Soldering" },
+        { type:"hw",       title:"Cable & Harness Assembly",          tag:"Crimping, MIL-C-38999 connector, coax term.",desc:"Wire stripping, crimping to MIL-C-22520, connector pin insertion, coax termination.", prereq:"PCB Schematic Reading (Space-Grade)" },
+        { type:"test",     title:"Cable & Harness Testing",           tag:"Continuity, hi-pot, shield integrity",     desc:"Post-build harness verification: continuity, insulation resistance, hi-pot, shield test.", prereq:"Cable & Harness Assembly" },
+        { type:"hw",       title:"Conformal Coating & Potting",       tag:"Acrylic/silicone coating, masking, cure",  desc:"Conformal coating application (spray/brush/dip), masking, UV cure inspection.", prereq:"PCB Assembly & Soldering" },
+      ]},
+      { label:"Solar Panel Fabrication & Cell Assembly", nodes:[
+        { type:"hw",       title:"Panel Substrate Fabrication",       tag:"Honeycomb core, skin cutting, vacuum bag, autoclave", desc:"Panel structural substrate: core cutting/degreasing, skin trimming, bonding, vacuum bagging, autoclave cure (120°C).", prereq:"PCB Schematic Reading (Space-Grade)" },
+        { type:"test",     title:"Solar Cell Visual Inspection",      tag:"Metallisation, coverglass, edge/corner chips, interconnect",desc:"IPC-compliant SCA incoming inspection: rear metallisation, edge/corner chip limits, coverglass defects, interconnect integrity.", prereq:"Solar Cell Characterisation, Measurement & Instrumentation" },
+        { type:"test",     title:"Electroluminescence (EL) Testing",  tag:"Forward bias, voltage ramp, EL defect criteria",      desc:"EL testing of cells, strings, and panels: darkroom setup, 100mA forward bias, comparison against EL defect criteria.", prereq:"Solar Cell Visual Inspection, DC Circuit Analysis (degree)" },
+        { type:"test",     title:"Solar Cell Pull Testing",           tag:">300g pass criterion, pull test report, bondtester",   desc:"Destructive interconnect weld pull testing: tensile pull (Dage bondtester), >300g pass, pull-off vs slip-off mode recording.", prereq:"Solar Cell Visual Inspection" },
+        { type:"hw",       title:"Interconnect Welding",              tag:"Parallel gap/ultrasonic welder, vacuum jig, weld log", desc:"Welding cell interconnects: vacuum jig, parallel gap or ultrasonic welder, per-string documentation, string EL and voltage check.", prereq:"Solar Cell Pull Testing, Cable & Harness Assembly" },
+        { type:"hw",       title:"Cell Laydown & Adhesive Application",tag:"SP120 primer, CV-2566, speed mixer, vacuum bag −0.1bar", desc:"Bonding cell strings to substrate: SP120 primer, CV-2566 adhesive mixing, vacuum de-bubbling, −0.1 bar vacuum bag, 12h cure.", prereq:"Interconnect Welding, Panel Substrate Fabrication" },
+        { type:"hw",       title:"Solar Panel Wiring & Bus Bar Assembly",tag:"Silver bus bars, PT sensor crimp, front/rear potting", desc:"Panel electrical completion: silver bus bar cutting, Rosemount PT sensor crimping, bus bar and wire welding, front/rear potting, Kapton taping.", prereq:"Cell Laydown, Cable & Harness Assembly, Pull Testing" },
+        { type:"test",     title:"Panel Insulation & Continuity Testing",tag:"≥100kΩ insulation, string voltage, RM sensor resistance", desc:"Panel electrical verification: insulation resistance ≥100kΩ, continuity of all wired components, string voltage check, RM sensor resistance.", prereq:"Solar Panel Wiring & Bus Bar Assembly, Measurement & Instrumentation" },
+      ]},
+      { label:"Rocket Avionics Engineering", nodes:[
+        { type:"design",   title:"Engine Controller Unit (ECU) Design",tag:"Solenoid valve sequencing, thrust command, EDL",desc:"ECU hardware and firmware: valve command sequencing (pre-chill, prime, ignition, shutdown), thrust command decoding, watchdog architecture.", prereq:"Embedded Middleware & Drivers, Bus & Interface Protocols, Propulsion Overview" },
+        { type:"design",   title:"Propellant Valve Driver Electronics",tag:"Solenoid PWM, current sense, open/close verify",desc:"High-current solenoid valve drivers: H-bridge topologies, PWM current control, valve position verify via current signature, snubber design.", prereq:"Motor & Actuator Drive Electronics, Protection & Fault Isolation" },
+        { type:"design",   title:"Ignition Sequencing & Timing Circuits",tag:"Countdown logic, T-0 sync, CDU firing pulse",desc:"Launch sequence controller: countdown state machine, T-0 synchronisation, hold/recycle logic, CDU fire pulse shaping.", prereq:"Pyrotechnic & Ordnance Circuits, RTOS Application Development" },
+        { type:"design",   title:"Inertial Measurement Unit Interface", tag:"IMU SPI/RS-422, quaternion output, health mon.",desc:"IMU data acquisition: SPI/RS-422 framing, quaternion and angular rate parsing, IMU health monitoring, dual-IMU voting.", prereq:"Spacecraft Bus Protocols, Analog Front-End Design" },
+        { type:"design",   title:"Flight Termination System Design",   tag:"Dual-chain FTS, safe/arm, RF receiver I/F",desc:"FTS electronics design: redundant RF receiver interfaces, ARM/FIRE command validation, latching destruct relay drivers, FTS battery conditioning.", prereq:"FTS Fundamentals, Power Supply Design, Protection & Fault Isolation" },
+        { type:"design",   title:"Launch Vehicle Power & Battery Systems",tag:"Launch battery, T-0 handover, distribution",desc:"LV avionics power: silver-zinc and Li primary batteries, umbilical-to-internal handover at T-0, pyro bus isolation, current-limited PDU.", prereq:"EPS Architecture Design, Pyrotechnic & Ordnance Circuits" },
+        { type:"design",   title:"Flight Computer Hardware Design",    tag:"Redundant CPU, watchdog, NVRAM, FPGA co-proc", desc:"Avionics flight computer: dual/triple-redundant CPU boards, hardware watchdog, NVRAM mission parameter storage, FPGA co-processor.", prereq:"Triple Modular Redundancy, Processor Architectures (degree), FPGA Development" },
+        { type:"test",     title:"Avionics Harness & Umbilical Test",  tag:"Continuity, isolation, pin-code check, EMI",desc:"LV harness test: end-to-end continuity, isolation between pyro and signal grounds, umbilical pin-code verification, shielding integrity.", prereq:"Cable & Harness Testing, GSE Design & Operation" },
+      ]},
+      { label:"Power & Interface Engineering", nodes:[
+        { type:"analysis", title:"EPS Architecture Design",           tag:"MPPT, regulated/unreg. bus, PDU topology",  desc:"EPS design: bus topology, MPPT selection, battery charge/discharge, PDU fault isolation.", prereq:"Power Supply Design, Spacecraft Bus Protocols" },
+        { type:"design",   title:"Harness Design",                    tag:"Wire sizing, shielding, ICD documentation", desc:"Spacecraft harness: wire gauge, shielding, connector qualification, ICD writing.", prereq:"Electromagnetic Environment, Component Derating" },
+        { type:"design",   title:"Protection & Fault Isolation",      tag:"Fusing, crowbar, OVP, OCP, inrush",        desc:"Circuit protection: fuse sizing, crowbar, OV/OC protection, polarity protection, inrush limiting.", prereq:"Power Supply Design, Component Derating" },
+      ]},
+      { label:"System Budgets — Subsystem Level", nodes:[
+        { type:"analysis", title:"Power Mode & Load Analysis",        tag:"Peak/avg load, duty cycle, power modes table", desc:"Subsystem power load characterisation: all power consumers, peak vs. average current draw, duty cycle per operational mode (acquisition, nominal, eclipse, safe mode, contingency). Builds the subsystem power table as an input to the spacecraft-level power budget.", prereq:"Power Supply Design, EPS Architecture Design" },
+        { type:"analysis", title:"Battery Sizing & DoD Analysis",     tag:"Capacity, depth of discharge, cycle life, BOL/EOL", desc:"Battery sizing for eclipse autonomy: capacity from worst-case eclipse duration and load, maximum allowable depth of discharge (DoD) for cycle life target, BOL-to-EOL capacity fade, temperature derating, charge/discharge efficiency, cell balancing implications.", prereq:"Power Mode & Load Analysis, Space Solar Cell Physics" },
+        { type:"analysis", title:"Telemetry Rate & Data Volume Analysis", tag:"HK TM rate, science data volume, OBT sizing", desc:"Subsystem data characterisation: HK parameter list and PUS S3 packet rates, science/payload data volume per orbit, on-board storage allocation per subsystem, downlink contact time requirements, compression ratio assumptions — inputs to the spacecraft-level data budget.", prereq:"PUS Services Implementation, RTOS for Space Applications" },
+        { type:"analysis", title:"Link Budget Fundamentals",          tag:"EIRP, path loss, G/T, Eb/N0, margin",      desc:"RF link budget basics for ECS engineers: transmit EIRP, free-space path loss, receive G/T, Eb/N0 required vs. available, link margin, antenna pointing loss, weather fade — sets the data throughput ceiling that constrains the data budget.", prereq:"Electromagnetic Environment, Telemetry Rate & Data Volume Analysis" },
+      ]},
+    ]
+  },
+  {
+    num:3, color:"#1B6FB5", light:"#E4EFF9", label:"SUBSYSTEM ENGINEERING", prereq:"Requires Tier 2",
+    groups:[
+      { label:"Spacecraft Systems", nodes:[
+        { type:"analysis", title:"FDIR Analysis",                     tag:"Fault tree, failure propagation, safe modes", desc:"Spacecraft FDIR: fault tree construction, failure propagation mapping, autonomous recovery mode definition.", prereq:"FMEA at Circuit Level, RTOS App Dev" },
+        { type:"design",   title:"C&DH Subsystem Design",             tag:"CCSDS, SpaceWire, MIL-STD-1553",           desc:"C&DH: telecommand decoding, CCSDS telemetry, mass memory, SpaceWire/1553 integration.", prereq:"RTL Design, Space Bus Protocol" },
+        { type:"design",   title:"Power Systems Design (EPS)",        tag:"MPPT algorithm, battery qual., PDU mfg.",   desc:"Full EPS: MPPT implementation, battery assembly/qualification, PDU manufacturing.", prereq:"EPS Architecture Design" },
+        { type:"design",   title:"ADCS Electronics",                  tag:"RW drive, IMU acq., sun sensor, magnetorquer",desc:"ADCS electrical: RW drivers, IMU data acquisition, sun sensor I/F, torque rod drivers.", prereq:"Motor Drive, Analog Front-End" },
+        { type:"design",   title:"Payload Front-End Electronics",     tag:"Detector-ROIC bring-up, noise validation",  desc:"Payload front-end integration: detector-ROIC bring-up, bias commissioning, noise validation.", prereq:"ROIC/ASIC I/F, Image Sensor I/F, Noise Budget" },
+        { type:"design",   title:"Payload Interface Electronics",     tag:"Secondary power, SpaceWire/LVDS, housekeeping",desc:"Spacecraft-payload I/F: secondary power conditioning, high-speed data links, health monitoring.", prereq:"C&DH, Power Systems, Payload FE" },
+        { type:"design",   title:"Solar Panel Subsystem Integration", tag:"LAPSS, string verification, HDRM deployment test",desc:"Solar panel integration: continuity/insulation check, EGSE-commanded HDRM deployment test, LAPSS electrical performance measurement.", prereq:"Panel Insulation & Continuity Testing, Solar Panel Electrical Design" },
+        { type:"design",   title:"Flight Software Development",       tag:"OBSW, FDIR logic, CCSDS TM",               desc:"OBSW: application layer on RTOS, FDIR logic, command scheduling, CCSDS TM pipeline.", prereq:"RTOS Application Development, Space Bus Protocol Implementation" },
+      ]},
+      { label:"Flight Software Engineering", nodes:[
+        { type:"design",   title:"OBSW Architecture Design",          tag:"ECSS-E-ST-40C, layered arch, component model",desc:"On-board software architecture: ECSS-E-ST-40C-compliant layered architecture (BSP, OS, middleware, application), component-based design, interface definition, memory map planning, boot sequence design, and software product tree.", prereq:"Flight Software Development, Software Safety Standards, Time & Space Partitioning" },
+        { type:"design",   title:"PUS Services Implementation",       tag:"PUS-C, TC/TM services 1/3/5/9/11/17/20",  desc:"ECSS Packet Utilization Standard (PUS-C) service implementation: TC verification (S1), housekeeping (S3), event reporting (S5), on-board time management (S9), time-tagged TC scheduling (S11), connection test (S17), software management (S20). TC routing, TM packetisation pipeline.", prereq:"OBSW Architecture Design, Space Bus Protocol Implementation" },
+        { type:"design",   title:"On-Board Time Management",          tag:"CCSDS time codes, coarse/fine time, GPS sync",desc:"Flight software timekeeping: CCSDS unsegmented time code (CUC), coarse/fine time fields, OBC tick management, time correlation with ground UTC, GPS 1PPS synchronisation, time-tagged command scheduling, leap-second handling.", prereq:"PUS Services Implementation" },
+        { type:"design",   title:"TC & TM Processing Pipeline",       tag:"TC decoding, APID routing, TM multiplexing",desc:"End-to-end TC/TM processing: TC frame synchronisation, CCSDS space data link frames, APID-based TC routing, command authentication, TM source packet multiplexing into virtual channels, housekeeping parameter pool management.", prereq:"PUS Services Implementation, C&DH Subsystem Design" },
+        { type:"design",   title:"On-Board FDIR Software Design",     tag:"Watchdog hierarchy, safe mode, recovery actions",desc:"Software fault detection and recovery: multi-level watchdog (task/OS/hardware), anomaly detection rules (threshold, stuck-at, delta), FDIR action tables, safe mode entry/exit logic, autonomous recovery sequencing, ground inhibit commands.", prereq:"OBSW Architecture Design, FDIR Analysis" },
+        { type:"design",   title:"Autonomous Operations & Scheduling",tag:"On-board timeline, OBCP engine, absolute/relative TC",desc:"On-board autonomy: time-tagged TC scheduling (PUS S11), on-board control procedure (OBCP) engine, relative and absolute time sequence execution, event-driven action triggers, ground-uploadable rule tables.", prereq:"PUS Services Implementation, On-Board Time Management" },
+        { type:"design",   title:"Mass Memory & Data Management",     tag:"Data store, downlink queue, compression, priority",desc:"OBSW data management: on-board data store architecture, housekeeping vs. event store, downlink priority queuing, data compression (Rice, CCSDS 121.0), store-and-forward for contact windows, memory scrubbing, file management.", prereq:"OBSW Architecture Design, Space Bus Protocol Implementation" },
+        { type:"design",   title:"Software Upload & In-Flight Patching",tag:"PUS S20, image validation, activation, rollback",desc:"On-board software update: memory load via PUS S20, SW image CRC/hash validation, activation and reset sequencing, rollback to previous image on boot failure, memory dump for ground verification, patch management.", prereq:"PUS Services Implementation, Software Configuration Management" },
+      ]},
+      { label:"Spacecraft System Budgets", nodes:[
+        { type:"analysis", title:"Spacecraft Power Budget",           tag:"Multi-mode budget, BOL/EOL margin, contingency, ECSS-E-ST-60", desc:"System-level power budget across all mission modes: compilation of all subsystem load tables, mode-by-mode power balance (generation vs. consumption), BOL and EOL power margin per ECSS-E-ST-60 guidelines (≥20% EOL margin), contingency allocation, worst-case eclipse power balance, budget configuration control and margin drawdown tracking.", prereq:"Power Mode & Load Analysis, Battery Sizing & DoD Analysis, Power Systems Design (EPS)" },
+        { type:"analysis", title:"On-Board Data Budget",              tag:"Storage allocation, downlink rate, margin, contact analysis", desc:"System-level data budget: total on-board storage capacity vs. allocation per subsystem, science data volume per orbit vs. downlink capacity per contact (from link budget), store-and-forward autonomy duration, data margin policy, compression trade-off, HK vs. mission data priority, tracking against mission timeline.", prereq:"Telemetry Rate & Data Volume Analysis, Link Budget Fundamentals, Mass Memory & Data Management" },
+        { type:"analysis", title:"Power Budget Configuration Control",tag:"Budget freeze, change impact, margin log, design review",   desc:"Managing the power budget as a living document: freeze at PDR/CDR, change impact assessment when subsystem loads shift, margin drawdown log, power budget review package for SDR/PDR/CDR, interface with systems engineering for margin policy and contingency release.", prereq:"Spacecraft Power Budget, Software Configuration Management" },
+        { type:"analysis", title:"Data Budget Configuration Control", tag:"Budget baseline, data rate changes, downlink schedule trade", desc:"Managing the data budget through design phases: baseline at PDR/CDR, impact of payload or HK rate changes, downlink schedule sensitivity analysis, interaction with ground segment for contact frequency trades, data budget review package for design reviews.", prereq:"On-Board Data Budget, Software Configuration Management" },
+      ]},
+      { label:"Launch Vehicle Avionics Subsystems", nodes:[
+        { type:"design",   title:"GNC Avionics Integration",          tag:"Flight computer ↔ IMU ↔ TVC, GNC loop latency",desc:"GNC avionics integration: flight computer to IMU data path, TVC actuator command interface, closed-loop GNC timing budget.", prereq:"IMU Interface, ECU Design, Flight Computer Hardware" },
+        { type:"design",   title:"Propulsion Control Subsystem",      tag:"Pre-launch sequence, engine start, MECO cmd",  desc:"Propulsion control integration: pre-launch checkout automation, engine start/shutdown state machine, MECO command timing, thrust anomaly FDIR.", prereq:"Propellant Valve Drivers, Ignition Sequencing, ECU Design" },
+        { type:"design",   title:"Range Safety Electronics Subsystem",tag:"FTS chain, flight rules, destruct authority",  desc:"Range safety avionics integration: FTS dual-chain independence, flight rule encoding, destruct authority cross-coupling prevention.", prereq:"FTS Design, Launch Vehicle Power" },
+        { type:"design",   title:"Launch Vehicle Flight Software",    tag:"OBSW, count-down sequencer, GNC algorithm",   desc:"LV flight software: countdown sequencer, GNC algorithm (gravity-turn, pitch programme), sensor voting, PCM/CCSDS telemetry.", prereq:"Flight Computer Hardware, RTOS App Dev, Space Bus Protocol" },
+        { type:"analysis", title:"Launch Environment Loads Analysis", tag:"Shock, vibration, acoustic, thermal transient",desc:"Launch environment effects on avionics: SRS shock spectrum, PSD vibration, acoustic loading on PCBs, thermal transients from ascent.", prereq:"Environmental Testing (T4), WCCA, EMI Environment" },
+      ]},
+      { label:"Subsystem Testing", nodes:[
+        { type:"test",     title:"Subsystem Functional Verification", tag:"Test procedures, pass/fail criteria",      desc:"Structured functional testing: test procedure authoring, stimulus-response, pass/fail, anomaly logging.", prereq:"Electronic Module Testing, subsystem design" },
+        { type:"test",     title:"Software V&V at Subsystem Level",   tag:"HIL bench, regression, FDIR scenario test", desc:"Flight SW verification: HIL test bench, regression suites, FDIR scenario testing.", prereq:"Embedded SW Testing, Flight SW Dev" },
+      ]},
+    ]
+  },
+  {
+    num:4, color:"#0B9668", light:"#DFF5EE", label:"INTEGRATION & TEST", prereq:"Requires Tier 3",
+    groups:[{ label:null, nodes:[
+      { type:"test",     title:"Environmental Testing",               tag:"Thermal-vac, vibe/shock, EMC/EMI",         desc:"Qualification & acceptance: thermal-vacuum, vibration/shock per ECSS-E-ST-10-03, EMC testing.", prereq:"Subsystem Functional Verification" },
+      { type:"test",     title:"PCB Fabrication QA & Inspection",    tag:"AOI, X-ray, IPC-A-610, ionic cleanliness", desc:"PCB QA: AOI, X-ray for BGAs, IPC-A-610 Class 3 inspection, ionic cleanliness testing.", prereq:"PCB Assembly & Soldering" },
+      { type:"design",   title:"ECS AIT Procedure Development",      tag:"Test procedure authoring, GSE design",     desc:"Authoring ECS AIT procedures: test scripts, GSE design, functional test setup documentation.", prereq:"GSE Design & Operation, Subsystem Testing" },
+      { type:"test",     title:"ECS AIT Execution",                  tag:"Module I&T, functional campaign, anomaly log",desc:"ECS AIT campaign: module integration, functional tests, anomaly logging, test report.", prereq:"ECS AIT Procedure Development" },
+      { type:"test",     title:"Solar Panel Post-Env. Inspection",   tag:"Post-vibe EL test, sensor outputs, cell rework",   desc:"Post-vibe/TVac solar panel inspection: cell check, EL test vs. pre-test baseline, Rosemount sensor verification, insulation test, LAPSS re-test.", prereq:"ECS AIT Execution, Solar Panel Subsystem Integration" },
+      { type:"analysis", title:"Reliability Engineering & FMECA",    tag:"FMECA, fault tree, ECSS-Q-ST-30-11",       desc:"System reliability: FMECA, fault tree analysis, part stress, ECSS-Q-ST-30-11 derating compliance.", prereq:"FMEA at Circuit Level, FDIR Analysis" },
+      { type:"test",     title:"Flight Software V&V Campaign",        tag:"Req-based testing, MC/DC, regression, IV&V",desc:"Flight software V&V campaign: requirement-based test case derivation, MC/DC coverage for safety-critical paths, formal IV&V independence, regression execution on flight hardware, software acceptance review (SAR), flight SW baseline lock.", prereq:"Software V&V at Subsystem Level, OBSW Architecture Design, Static Analysis & Coding Standards" },
+      { type:"test",     title:"Software-Hardware Integration Testing",tag:"HIL, closed-loop sim, fault injection",    desc:"SW/HW integration: HIL test bench with stimulated sensors and actuators, closed-loop GNC simulation, fault injection testing (watchdog timeouts, bus errors, memory corruption), FDIR scenario coverage, timing and latency measurement against WCET budget.", prereq:"Flight Software V&V Campaign, Subsystem Functional Verification" },
+      { type:"test",     title:"Launch Vehicle Avionics AIT",        tag:"LV EGSE, end-to-end countdown, FTS arming",desc:"LV avionics integration: EGSE-driven countdown simulation, pyro loop continuity with safe plugs, FTS ARM/FIRE simulation, GNC HIL run.", prereq:"ECS AIT Execution, Range Safety Electronics Subsystem" },
+      { type:"test",     title:"FTS Qualification & Acceptance Testing",tag:"RF margin, destruct relay proof, MIL-STD-1512",desc:"FTS qualification: RF link margin, ARM/FIRE timing verification, destruct relay proof-fire, safe-and-arm qualification, MIL-STD-1512 compliance.", prereq:"LV Avionics AIT, Environmental Testing" },
+      { type:"test",     title:"Propulsion ECS Hotfire Readiness Test",tag:"Pre-hotfire checkout, ignition timeline, data acq",desc:"Pre-hotfire checkout: valve driver sweep, CDU charge-ready verify, data acquisition calibration, abort line integrity, post-hotfire data review.", prereq:"LV Avionics AIT, Propulsion Control Subsystem" },
+    ]}]
+  },
+  {
+    num:5, color:"#6537A3", light:"#EEE8F8", label:"ADVANCED / AIT FACILITY OPS", prereq:"Requires Tier 4",
+    groups:[{ label:null, nodes:[
+      { type:"test",     title:"Satellite-Level AIT",                 tag:"System I&T, end-to-end functional test",   desc:"Full satellite I&T: harness integration, subsystem mating, end-to-end verification, flight readiness.", prereq:"ECS AIT Execution, Reliability & FMECA" },
+      { type:"design",   title:"Ground Segment Interface",            tag:"Mission ops, LEOP, in-orbit commissioning", desc:"Ground-spacecraft interface: mission control SW integration, LEOP procedures, commissioning support.", prereq:"Flight SW Dev, Satellite-Level AIT" },
+      { type:"test",     title:"Advanced Radiation Testing",          tag:"Proton SEE, heavy ion, Co-60 TID",         desc:"Radiation test campaign: proton/heavy-ion SEE testing, Co-60 TID, test plan, lot acceptance.", prereq:"RHBD, Environmental Testing" },
+      { type:"hw",       title:"Manufacturing Process Engineering",   tag:"Yield, DFM/DFT, Cpk, production line",     desc:"Manufacturing process: yield analysis, DFM/DFT reviews, Cpk studies, production line setup.", prereq:"PCB Fabrication QA, ECS AIT Execution" },
+      { type:"design",   title:"Technology Transfer Management",      tag:"IP licensing, ITAR/EAR, training program",  desc:"Tech transfer: IP licensing, know-how documentation, local training program design, ITAR/EAR compliance.", prereq:"Satellite-Level AIT, Mfg. Process Eng." },
+      { type:"test",     title:"Launch Operations ECS Support",       tag:"T-0 readiness, count hold, range interface",desc:"Launch day support: countdown readiness verification, range safety interface checks, count hold/recycle procedures, T-0 auto-sequence monitoring.", prereq:"FTS Qualification, Propulsion ECS Hotfire Readiness" },
+      { type:"design",   title:"Flight Data Reconstruction & Analysis",tag:"PCM telemetry decode, FDR, anomaly RCA",   desc:"Post-flight data analysis: PCM/CCSDS telemetry decode, FDR extraction, sensor time-history correlation, anomaly RCA.", prereq:"Launch Operations ECS Support, Reliability Engineering & FMECA" },
+      { type:"design",   title:"In-Orbit Software Maintenance",       tag:"SW anomaly RCA, patch upload, LEOP commissioning",desc:"On-orbit OBSW maintenance: anomaly investigation using housekeeping telemetry and event logs, patch development and validation on flight-representative testbench, uplink via PUS S20, commissioning updates to FDIR thresholds and parameter tables, ground command database maintenance.", prereq:"Software Upload & In-Flight Patching, Ground Segment Interface" },
+      { type:"design",   title:"Ground Segment Software Development", tag:"MCS, SCOS-2000, EGOS-CC, TC database",     desc:"Mission control software engineering: MCS configuration (SCOS-2000, EGOS-CC, OpenSatKit), TC/TM database definition (MIB/CDB), display and procedure authoring, automated monitoring rules, LEOP procedure scripting, interface to flight dynamics system.", prereq:"TC & TM Processing Pipeline, Flight Software Development" },
+    ]}]
+  }
+];
+
+const TECH_TRACK = {
+  color:"#0E7490", light:"#E0F7FA", label:"TECHNICAL DOCUMENTATION TRACK",
+  note:"Parallel track — spans all engineering tiers",
+  groups:[
+    { label:"Systems Engineering Docs", nodes:[
+      { type:"tech", title:"FDIR Analysis Documentation",         tag:"FDIR report, failure catalogue, review board pkg",desc:"Formal FDIR analysis document: failure catalogue, fault trees, SDR/PDR/CDR review board package.", prereq:"FDIR Analysis (T3)" },
+      { type:"tech", title:"FMEA/FMECA Report Writing",           tag:"FMECA worksheet, criticality matrix, RPN",  desc:"FMEA/FMECA reports: failure mode worksheets, criticality matrices, RPN, design review packaging.", prereq:"FMEA at Circuit Level (T2)" },
+      { type:"tech", title:"Interface Control Document (ICD)",    tag:"Pin lists, signal definitions, margin table", desc:"Electrical ICD authoring: connector pin assignments, signal definitions, voltage/current margins.", prereq:"Harness Design (T2)" },
+    ]},
+    { label:"Test & Verification Docs", nodes:[
+      { type:"tech", title:"Test Plan Writing",                   tag:"Test matrix, resources, pass/fail criteria", desc:"Test plans: approach, requirement traceability, test cases, resources, schedule, pass/fail criteria.", prereq:"Electronic Module Testing (T2)" },
+      { type:"tech", title:"Test Report Writing",                 tag:"Results, anomaly log, disposition, traceability",desc:"Test reports: results vs. requirements, anomaly documentation with root-cause and disposition.", prereq:"Test Plan Writing" },
+      { type:"tech", title:"Non-Conformance Report (NCR)",        tag:"NCR form, root cause, corrective action",   desc:"NCRs for hardware/software: deviation description, root-cause analysis, corrective/preventive action.", prereq:"Test Report Writing" },
+    ]},
+    { label:"Change & Configuration Control Docs", nodes:[
+      { type:"tech", title:"Design Revision (DR) Writing",        tag:"DR form, problem statement, disposition, affected drawings", desc:"Authoring Design Revisions: problem statement, affected drawing list, proposed change, impact assessment, approval routing, and revision status tracking.", prereq:"Non-Conformance Report (NCR)" },
+      { type:"tech", title:"Engineering Change Note (ECN) Writing",tag:"ECN form, change description, drawing redlines, effectivity", desc:"ECN authoring: change description and rationale, before/after comparison, drawing redlines, BOM delta, effectivity, verification method, and approval signatures.", prereq:"Design Revision (DR) Writing, Interface Control Document (ICD)" },
+      { type:"tech", title:"Module Revision Board (MRB) Package", tag:"MRB agenda, DR/ECN stack, disposition matrix, action items", desc:"Preparing and running an MRB: compiling the open DR/ECN stack, drafting the disposition matrix (accept, rework, scrap, use-as-is with waiver), assigning action owners, and tracking closure.", prereq:"Engineering Change Note (ECN) Writing, Test Report Writing" },
+    ]},
+  ]
+};
+
+const ADMIN_TRACK = {
+  color:"#2C6E8A", light:"#E3F2F8", label:"GOVERNMENT ADMINISTRATIVE TRACK",
+  note:"Parallel track — applicable at all tiers",
+  groups:[
+    { label:"Government Administrative Skills", nodes:[
+      { type:"admin", title:"Complete Staff Work (CSW)",           tag:"Decision-ready briefs, CSW checklist",      desc:"CSW: decision-ready documents with problem, analysis, recommended action, and alternatives.", prereq:"None" },
+      { type:"admin", title:"Technical Memo & Brief Writing",      tag:"Memo format, exec summary, action paragraphs",desc:"Technical memos: heading formats, executive summaries, numbered action paragraphs, annexes.", prereq:"None" },
+      { type:"admin", title:"PPMP Submission & Management",        tag:"PPMP, budget allocation, BAC coordination",  desc:"PPMP preparation and tracking: budget per item, GPPB compliance, actual vs. planned, BAC coordination.", prereq:"None" },
+      { type:"admin", title:"Purchase Request (PR) Submission",    tag:"PR form, ABC, specs, RA 12009 & IRR",       desc:"PR preparation: technical specs, ABC establishment, justification docs, routing under RA 12009 and its IRR.", prereq:"PPMP Submission" },
+      { type:"admin", title:"Procurement Compliance (RA 12009 & IRR)",tag:"BAC, PhilGEPS, SVP, bidding docs",        desc:"RA 12009 and IRR procurement: BAC roles, PhilGEPS posting, SVP thresholds, bidding document preparation.", prereq:"PR Submission" },
+      { type:"admin", title:"Technical Specifications Writing",    tag:"Performance specs, acceptance criteria, TOR", desc:"Procurement specs: performance vs. design specs, measurable acceptance criteria, TOR/SOW writing.", prereq:"Complete Staff Work" },
+    ]},
+  ]
+};
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+function makeNode(node, color) {
+  const tm = TYPE_META[node.type] || TYPE_META.design;
+  const el = document.createElement("div");
+  el.className = "node" + (node.type==="test" ? " is-test" : "") + (node.type==="analysis" ? " is-analysis" : "");
+  el.style.borderLeftColor = color;
+  el.innerHTML = `<span class="ntype" style="background:${tm.bg};color:${tm.color}">${tm.label}</span>${node.title}`;
+  return el;
+}
+
+function renderTier(tier) {
+  const block = document.createElement("div");
+  block.className = "tier-block";
+
+  // Header
+  const hdr = document.createElement("div");
+  hdr.className = "tier-hdr";
+  hdr.innerHTML = `
+    <div class="tier-pill" style="background:${tier.color}">T${tier.num}</div>
+    <div class="tier-title">${tier.label}</div>
+    <div class="tier-line"></div>
+    <div class="tier-prereq">${tier.prereq}</div>`;
+  block.appendChild(hdr);
+
+  // Prereq banner
+  if (tier.prereqBanner) {
+    const banner = document.createElement("div");
+    banner.className = "prereq-banner";
+    banner.innerHTML = `<span class="prereq-banner-label">ECE prereqs</span><span class="prereq-banner-body">${tier.prereqBanner}</span>`;
+    block.appendChild(banner);
+  }
+
+  // Groups
+  tier.groups.forEach(g => {
+    const gb = document.createElement("div");
+    gb.className = "group-block";
+    if (g.label) {
+      const gl = document.createElement("div");
+      gl.className = "group-label";
+      gl.innerHTML = `<span>${g.label}</span><span class="group-label-rule"></span>`;
+      gb.appendChild(gl);
+    }
+    const row = document.createElement("div");
+    row.className = "tree-nodes";
+    g.nodes.forEach(n => row.appendChild(makeNode(n, tier.color)));
+    gb.appendChild(row);
+    block.appendChild(gb);
+  });
+
+  return block;
+}
+
+function renderTrack(track) {
+  const wrap = document.createElement("div");
+  wrap.className = "track-block";
+
+  const hdr = document.createElement("div");
+  hdr.className = "track-hdr";
+  hdr.style.cssText = `background:${track.light};color:${track.color};border:0.5pt solid ${track.color}44;`;
+  hdr.innerHTML = `<span>⊕</span> ${track.label}`;
+  wrap.appendChild(hdr);
+
+  const note = document.createElement("div");
+  note.className = "track-note";
+  note.style.color = track.color;
+  note.textContent = track.note;
+  wrap.appendChild(note);
+
+  track.groups.forEach(g => {
+    if (g.label) {
+      const gl = document.createElement("div");
+      gl.className = "group-label";
+      gl.innerHTML = `<span>${g.label}</span><span class="group-label-rule"></span>`;
+      gl.style.marginTop = "4pt";
+      wrap.appendChild(gl);
+    }
+    const row = document.createElement("div");
+    row.className = "side-nodes";
+    g.nodes.forEach(n => row.appendChild(makeNode(n, track.color)));
+    wrap.appendChild(row);
+  });
+
+  return wrap;
+}
+
+const content = document.getElementById("content");
+
+// Render all tiers
+TIERS.forEach(t => content.appendChild(renderTier(t)));
+
+// Section divider
+const div1 = document.createElement("div");
+div1.className = "section-divider";
+div1.innerHTML = `<div class="section-divider-line"></div><div class="section-divider-label">Parallel Tracks</div><div class="section-divider-line"></div>`;
+content.appendChild(div1);
+
+// Render tracks
+content.appendChild(renderTrack(TECH_TRACK));
+content.appendChild(renderTrack(ADMIN_TRACK));
+</script>
+</body>
+</html>
